@@ -1,0 +1,11 @@
+main: com.chaoticcade.cslreport.cslreport
+name: cslreport
+version: 1.0
+author: Chaotic Cade
+description: ChestShop log reporter
+commands:
+  csrep:
+    description: Reports back ChestShop sales.
+    usage: /csrep <search|page> <number>
+    permission: cslreport.cslreport
+    permission-message: You don't have permission to run this command.
