@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.chaoticcade</groupId>
   <artifactId>cslreport</artifactId>
-  <version>1.12.2-R0.1-SNAPSHOT</version>
+  <version>1.12.2-R1.1-SNAPSHOT</version>
   <name>ChestShop Log Reporter</name>
   <description>Reports back information from the ChestShop logs</description>
 </project>
