@@ -23,18 +23,18 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 
 public class cslreport extends JavaPlugin implements Listener {
-		
-    @Override
-    public void onEnable() {
-       System.out.println("cslreport Online!");
-       getServer().getPluginManager().registerEvents(this, this);
-       getDataFolder().mkdir(); //TODO Update so it checks and doesn't blindly create folder
-    }
 
-    @Override
-    public void onDisable() {
-       System.out.println("cslreport Disabled!");
-    }
+	@Override
+	public void onEnable() {
+		System.out.println("cslreport Online!");
+		getServer().getPluginManager().registerEvents(this, this);
+		getDataFolder().mkdir(); //TODO Update so it checks and doesn't blindly create folder
+	}
+
+	@Override
+	public void onDisable() {
+		System.out.println("cslreport Disabled!");
+	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -42,36 +42,36 @@ public class cslreport extends JavaPlugin implements Listener {
 			sender.sendMessage("Invalid number of arguments!");
 			return false;
 		}
-        if (cmd.getName().equalsIgnoreCase("csrep") && (args[0]).equalsIgnoreCase("search") && isStringInt(args[1]) == true){
+		if (cmd.getName().equalsIgnoreCase("csrep") && (args[0]).equalsIgnoreCase("search") && isStringInt(args[1]) == true){
 
-        	//search command
-        	if (Integer.parseInt(args[1]) > 7){
-        		sender.sendMessage("Can not search more than 7 days back!");
-        		return true;
-        	}
-        	if (Integer.parseInt(args[1]) < 1){
-        		sender.sendMessage("Minimum search is 1 day.");
-        		return true;
-        	}
-        	else {
-        	
-        		try {
-        			readLog(sender, Integer.parseInt(args[1]));
-        		
-        		}
-        		catch (Exception e) {
-        			// TODO Auto-generated catch block
-        			e.printStackTrace();
-        		}
-        	
-        	}
-        	return true;
-        }
-       	
-        if (cmd.getName().equalsIgnoreCase("csrep") && (args[0]).equalsIgnoreCase("page") && isStringInt(args[1]) == true){        
-		
-        	//scroll through data command
-        	try {
+			//search command
+			if (Integer.parseInt(args[1]) > 7){
+				sender.sendMessage("Can not search more than 7 days back!");
+				return true;
+			}
+			if (Integer.parseInt(args[1]) < 1){
+				sender.sendMessage("Minimum search is 1 day.");
+				return true;
+			}
+			else {
+
+				try {
+					readLog(sender, Integer.parseInt(args[1]));
+
+				}
+				catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+			return true;
+		}
+
+		if (cmd.getName().equalsIgnoreCase("csrep") && (args[0]).equalsIgnoreCase("page") && isStringInt(args[1]) == true){        
+
+			//scroll through data command
+			try {
 				browseLog(sender, Integer.parseInt(args[1]));
 			} catch (NumberFormatException e) {
 				// TODO Auto-generated catch block
@@ -80,20 +80,20 @@ public class cslreport extends JavaPlugin implements Listener {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-        	return true;
-        }
-        
-        //new commands here
-        
-        return false;
+			return true;
 		}
+
+		//new commands here
+
+		return false;
+	}
 
 
 	public void readLog(CommandSender sender, Integer days) throws Exception {
 		sender.sendMessage("Searching...");
-    	String workingFile = (getDataFolder() + "\\" + (((Player) sender).getUniqueId()).toString() + ".log");
-    	Files.deleteIfExists(Paths.get(workingFile));
-    	FileWriter fr = new FileWriter(workingFile, true);
+		String workingFile = (getDataFolder() + "\\" + (((Player) sender).getUniqueId()).toString() + ".log");
+		Files.deleteIfExists(Paths.get(workingFile));
+		FileWriter fr = new FileWriter(workingFile, true);
 		String reader = sender.getName().toString();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		List<String> dateList = new ArrayList<String>();
@@ -110,7 +110,7 @@ public class cslreport extends JavaPlugin implements Listener {
 				d++;
 			}
 		}
-		
+
 		int w = 0;
 		while (w < dateList.size()) {
 			File log = new File(dateList.get(w));
@@ -135,11 +135,11 @@ public class cslreport extends JavaPlugin implements Listener {
 								+ myList.get(15) + '\n';
 						fr.write(entry);
 					}
-					
+
 					i++;
-					}
-				br.close();
 				}
+				br.close();
+			}
 			w++;
 		}
 		fr.close();
@@ -148,52 +148,52 @@ public class cslreport extends JavaPlugin implements Listener {
 		while (lineCounter.readLine() != null) lines++;
 		lineCounter.close();
 		sender.sendMessage("Search complete! You have " + (int) Math.ceil((lines / 5.0))+ " pages of data. Use /csrep page # to browse data.");
-				
+
 	}
-	
+
 	public void browseLog(CommandSender sender, Integer pageNumber) throws Exception {
 		Map<String, String> transactionData = new HashMap<String, String>();
-    	String file = (getDataFolder() + "\\" + (((Player) sender).getUniqueId()).toString() + ".log");
-    	BufferedReader br = new BufferedReader(new FileReader(file));  
-    	String line = null;
-    	int key = 0;
-    	while ((line = br.readLine()) != null) {
-    		String keyString = Integer.toString(key);
-    		transactionData.put(keyString, line);
-    		key++;
-    	} 
-    	br.close();
+		String file = (getDataFolder() + "\\" + (((Player) sender).getUniqueId()).toString() + ".log");
+		BufferedReader br = new BufferedReader(new FileReader(file));  
+		String line = null;
+		int key = 0;
+		while ((line = br.readLine()) != null) {
+			String keyString = Integer.toString(key);
+			transactionData.put(keyString, line);
+			key++;
+		} 
+		br.close();
 
-    	//Iterate from startLine to endLine
-    	int startLine = ((pageNumber - 1) * 5);
-    	int endLine = (pageNumber * 5);
-    	
-    	
-    	
-    	while (startLine < endLine) {
-    		if (transactionData.get(Integer.toString(startLine)) != null) {
-    		sender.sendMessage((startLine + 1) + ". " + transactionData.get(Integer.toString(startLine)));
-    		startLine++;
-    		}
-    		else {
-    			sender.sendMessage("End of data.");
-    		break;
-    		}
-    	}
-    	
-    	
-    }
-    	
-	
-    public boolean isStringInt(String s)
-    {
-        try
-        {
-            Integer.parseInt(s);
-            return true;
-        } catch (NumberFormatException ex)
-        {
-            return false;
-        }
-    }
+		//Iterate from startLine to endLine
+		int startLine = ((pageNumber - 1) * 5);
+		int endLine = (pageNumber * 5);
+
+
+
+		while (startLine < endLine) {
+			if (transactionData.get(Integer.toString(startLine)) != null) {
+				sender.sendMessage((startLine + 1) + ". " + transactionData.get(Integer.toString(startLine)));
+				startLine++;
+			}
+			else {
+				sender.sendMessage("End of data.");
+				break;
+			}
+		}
+
+
+	}
+
+
+	public boolean isStringInt(String s)
+	{
+		try
+		{
+			Integer.parseInt(s);
+			return true;
+		} catch (NumberFormatException ex)
+		{
+			return false;
+		}
+	}
 }
